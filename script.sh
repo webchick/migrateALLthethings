@@ -7,7 +7,7 @@ cd d7top50
 # Awww yeah, using MAMP like it's 1999... ;)
 drush8 si --db-url=mysql://root:root@127.0.0.1:8889/d7top50 -y
 
-MODULES="ctools		\
+MODULES_D7="ctools	\
 views			\
 token			\
 libraries		\
@@ -57,8 +57,8 @@ addressfield		\
 admin_views"
 
 # Download and enable the top 50 contributed modules.
-drush8 dl -y $MODULES
-drush8 en -y $MODULES
+drush8 dl -y $MODULES_D7
+drush8 en -y $MODULES_D7
 
 # Google Analtyics is a bit "special" since the project name and module name
 # mismatch.
@@ -69,3 +69,62 @@ drush8 en -y googleanalytics
 # add it manually here.
 drush8 dl -y ckeditor 
 drush8 en -y ckeditor
+
+# Now, set up a Drupal 8 site to migrate to.
+rm -rf d8destination
+composer create-project drupal-composer/drupal-project:8.x-dev d8destination --no-interaction
+cd d8destination
+composer require drush/drush
+composer install
+
+# Download and enable D8 equivalents for all of the above projects.
+CORE_D8="views		\
+date                    \
+link                    \
+wysiwyg                 \
+entity_reference        \
+media                   \
+email                   \
+content_translation	\
+locale			\
+language"
+
+MODULES_D8="ctools      \
+token                   \
+libraries               \
+pathauto                \
+entity                  \
+admin_toolbar           \
+webform                 \
+metatag                 \
+imce                    \
+module_filter           \
+field_group             \
+rules                   \
+transliteration         \
+captcha                 \
+xmlsitemap              \
+colorbox                \
+features                \
+backup_migrate          \
+views_bulk_operations   \
+variable                \
+file_entity             \
+views_slideshow         \
+panels                  \
+menu_block              \
+devel                   \
+globalredirect          \
+field_collection        \
+redirect                \
+context                 \
+block_class             \
+imce_wysiwyg            \
+strongarm               \
+ds                      \
+menu_attributes         \
+mailsystem              \
+superfish               \
+address	                \
+admin_views"
+
