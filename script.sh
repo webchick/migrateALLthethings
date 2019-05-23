@@ -19,7 +19,6 @@ webform			\
 date			\
 metatag			\
 imce			\
-ckeditor		\
 module_filter		\
 link			\
 wysiwyg			\
@@ -57,7 +56,6 @@ superfish		\
 addressfield		\
 admin_views"
 
-
 # Download and enable the top 50 contributed modules.
 drush8 dl -y $MODULES
 drush8 en -y $MODULES
@@ -66,3 +64,8 @@ drush8 en -y $MODULES
 # mismatch.
 drush8 dl -y google_analytics 
 drush8 en -y googleanalytics
+
+# For some reason CKEditor wigs out when included in list above, so instead
+# add it manually here.
+drush8 dl -y ckeditor 
+drush8 en -y ckeditor
