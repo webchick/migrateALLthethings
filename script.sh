@@ -1,4 +1,8 @@
-# Get a copy of Drupal 7 and the top 50 contributed modules.
+# A script to quickly set up a D7 site with a bunch of popular modules and a D8
+# site to migrate to. The idea is to track available migrations over time.
+# @todo: See about splitting the D7 stuff from the D8 stuff.
+
+# First, the Drupal 7 source site.
 # We clone from Git in order to get the latest code, which may or may not
 # correspond to the latest release.
 git clone --branch 7.x https://git.drupalcode.org/project/drupal.git d7top50
@@ -72,59 +76,65 @@ drush8 en -y ckeditor
 
 # Now, set up a Drupal 8 site to migrate to.
 rm -rf d8destination
-composer create-project drupal-composer/drupal-project:8.x-dev d8destination --no-interaction
+composer create-project drupal-composer/drupal-project:8.x-dev d8top50 --no-interaction
 cd d8destination
 composer require drush/drush
 composer install
+drush8 si --db-url=mysql://root:root@127.0.0.1:8889/d8top50 -y
 
 # Download and enable D8 equivalents for all of the above projects.
-CORE_D8="views		\
-date                    \
-link                    \
-wysiwyg                 \
-entity_reference        \
-media                   \
-email                   \
-content_translation	\
-locale			\
-language"
+CORE_D8=(
+  'views'
+  'date'
+  'link'
+  'wysiwyg'
+  'entity_reference'
+  'media'
+  'email'
+  'content_translation'
+  'locale'
+  'language'
+)
 
-MODULES_D8="ctools      \
-token                   \
-libraries               \
-pathauto                \
-entity                  \
-admin_toolbar           \
-webform                 \
-metatag                 \
-imce                    \
-module_filter           \
-field_group             \
-rules                   \
-transliteration         \
-captcha                 \
-xmlsitemap              \
-colorbox                \
-features                \
-backup_migrate          \
-views_bulk_operations   \
-variable                \
-file_entity             \
-views_slideshow         \
-panels                  \
-menu_block              \
-devel                   \
-globalredirect          \
-field_collection        \
-redirect                \
-context                 \
-block_class             \
-imce_wysiwyg            \
-strongarm               \
-ds                      \
-menu_attributes         \
-mailsystem              \
-superfish               \
-address	                \
-admin_views"
+MODULES_D8=(
+  'ctools'
+  'token'
+  'libraries'
+  'pathauto'
+  'entity'
+  'admin_toolbar'
+  'webform'
+  'metatag'
+  'imce'
+  'module_filter'
+  'field_group'
+  'rules'
+  'transliteration'
+  'captcha'
+  'xmlsitemap'
+  'colorbox'
+  'features'
+  'backup_migrate'
+  'views_bulk_operations'
+  'file_entity'
+  'views_slideshow'
+  'panels'
+  'menu_block'
+  'devel'
+  'paragraphs'
+  'redirect'
+  'block_class'
+  'imce_wysiwyg'
+  'ds'
+  'menu_attributes'
+  'mailsystem'
+  'superfish'
+  'address'
+  'admin_views'
+)
+
+for MODULE in $(MODULES_D8[@]}; do
+  "composer require drupal/{MODULE}"
+  "drush en {MODULE}"
+done
 
